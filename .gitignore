@@ -1,0 +1,28 @@
+# Build directories
+cmake-build-*/
+build/
+out/
+bin/
+lib/
+
+# IDE files
+.idea/
+.vscode/
+*.suo
+*.user
+*.sln.docstates
+
+# Compiled binaries and artifacts
+*.exe
+*.dll
+*.lib
+*.exp
+*.obj
+*.o
+*.pdb
+*.ilk
+
+# Logs and temporary files
+*.log
+*.tmp
+__pycache__/

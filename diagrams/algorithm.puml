@@ -1,0 +1,30 @@
+@startuml
+skinparam backgroundColor white
+start
+:Разбор параметров командной строки\n(--dll, --size, --seed, --runs, --mode);
+if (Параметры корректны?) then (Нет)
+  :Вывод справки и кода ошибки;
+  stop
+else (Да)
+endif
+:Вызов LoadLibraryA(dllPath);
+if (HMODULE != NULL?) then (Нет)
+  :GetLastError() + FormatMessageA();\nЗапись ошибки в журнал;
+  stop
+else (Да)
+endif
+:Поиск адресов функций через GetProcAddress()\n(ArraySum, ArrayMin, ArrayMax, ArrayAverage);
+if (Все 4 функции найдены?) then (Нет)
+  :Вывод ошибки и запись в журнал;
+  :Вызов FreeLibrary(hModule);
+  stop
+else (Да)
+endif
+:Генерация тестового массива (mt19937, SEED=12058);
+:Вызов функций DLL и замер времени\nчерез QueryPerformanceCounter();
+:Сверка результатов и экспорт в CSV;
+:Вызов FreeLibrary(hModule);
+:Проверка выгрузки через GetModuleHandleA() == NULL;
+:Сохранение журнала и завершение;
+stop
+@enduml

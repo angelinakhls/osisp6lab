@@ -1,0 +1,39 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam backgroundColor white
+
+package "lab06_app.exe (Главное приложение)" {
+  [CLI Parser & Benchmark Runner\n(main.cpp)] as Main
+  [MathDllLoader (RAII)\n(dll_loader.h / .cpp)] as Loader
+  [Logger & Error Formatter\n(logger.h / .cpp)] as Log
+}
+
+package "Windows OS Kernel32 API" {
+  [LoadLibraryA / GetModuleFileNameA] as WinLoad
+  [GetProcAddress] as WinProc
+  [FreeLibrary / GetModuleHandleA] as WinFree
+  [QueryPerformanceCounter] as WinQPC
+  [GetLastError / FormatMessageA] as WinErr
+}
+
+package "KhlusMathLib.dll (Динамическая библиотека)" {
+  [DllMain] as DllMain
+  [ArraySum] as FSum
+  [ArrayMin] as FMin
+  [ArrayMax] as FMax
+  [ArrayAverage] as FAvg
+}
+
+Main --> Loader : загрузка / вызов / выгрузка
+Main --> WinQPC : замер времени
+Loader --> Log : журналирование
+Log --> WinErr : декодирование ошибок
+Loader --> WinLoad : загрузка DLL
+Loader --> WinProc : поиск адресов
+Loader --> WinFree : освобождение DLL
+WinLoad ..> DllMain : DLL_PROCESS_ATTACH
+WinProc ..> FSum
+WinProc ..> FMin
+WinProc ..> FMax
+WinProc ..> FAvg
+@enduml
